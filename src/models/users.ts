@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose"
 import { composeMongoose, composeWithMongoose } from "graphql-compose-mongoose"
 
-
 const usersSchema = new Schema(
   {
     email: { type: String, required: true, unique: true },

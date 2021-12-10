@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import dotenv from "dotenv"
 const result = dotenv.config({
-  path: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env',
+  path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env"
 })
 
 if (result.error) {
@@ -9,9 +9,10 @@ if (result.error) {
 }
 
 import { ApolloServer } from "apollo-server-express"
-import graphqlSchema from "./schemas/index"
+import bodyParser from "body-parser"
 import mongoose from "mongoose"
 import express from "express"
+import cors from "cors"
 import http from "http"
 import https from "https"
 import fs from "fs"
@@ -19,7 +20,11 @@ import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageDisabled
 } from "apollo-server-core"
-
+import { execute, subscribe } from "graphql"
+import { PubSub } from "graphql-subscriptions"
+import { SubscriptionServer } from "subscriptions-transport-ws"
+import { graphqlSchema, setPubSub } from "./schemas/index"
+import expressPlayground from "graphql-playground-middleware-express"
 
 const prod: boolean = process.env.NODE_ENV === "prod"
 
@@ -37,15 +42,23 @@ mongoose
   })
 
 async function startApolloServer() {
-  const app = express()
   const options = {
     key: prod ? fs.readFileSync(KEY_PATH)?.toString() : "",
-    cert: prod ? fs.readFileSync(CRT_PATH)?.toString() : "",
+    cert: prod ? fs.readFileSync(CRT_PATH)?.toString() : ""
   }
+  const app = express()
 
-  const httpServer = prod ? https.createServer(options, app) : http.createServer(app)
+  app.use(cors())
+  app.use("/graphql", bodyParser.json())
+
   const apollo = new ApolloServer({
     schema: graphqlSchema,
+    context: ({ req }) => {
+      return {
+        startTime: Date.now(),
+        token: req.headers["authorization"]
+      }
+    },
     plugins: [
       prod
         ? ApolloServerPluginLandingPageDisabled()
@@ -55,8 +68,42 @@ async function startApolloServer() {
 
   await apollo.start()
   apollo.applyMiddleware({ app })
-  await httpServer.listen(4000, "0.0.0.0")
-  console.log(`🚀 Server ready at http${prod ? "s" : ""}://localhost:4000${apollo.graphqlPath}`)
+
+  const pubsub = new PubSub()
+  setPubSub(pubsub)
+
+  const httpServer = prod
+    ? https.createServer(options, app)
+    : http.createServer(app)
+
+  httpServer.listen(4000, "0.0.0.0", async () => {
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema: graphqlSchema,
+        onConnect: (ctx: any) => {
+          console.log("Connect", ctx)
+        }
+      },
+      {
+        server: httpServer,
+        path: "/subscriptions"
+      }
+    )
+    app.get(
+      "/playground",
+      expressPlayground({
+        endpoint: apollo.graphqlPath,
+        subscriptionEndpoint: "/subscriptions"
+      })
+    )
+  })
+  console.log(
+    `🚀 Server ready at http${prod ? "s" : ""}://localhost:4000${
+      apollo.graphqlPath
+    }`
+  )
 }
 
 startApolloServer()

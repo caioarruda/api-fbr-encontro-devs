@@ -1,13 +1,25 @@
 import { SchemaComposer } from "graphql-compose"
-import { usersQuery, usersMutation } from "./users"
+import {
+  usersQuery,
+  usersMutation,
+  usersSubscription,
+  setUserPubSub
+} from "./users"
 
 const schemaComposer = new SchemaComposer()
 schemaComposer.Query.addFields({
-  ...usersQuery,
+  ...usersQuery
 })
 schemaComposer.Mutation.addFields({
-  ...usersMutation,
+  ...usersMutation
+})
+schemaComposer.Subscription.addFields({
+  ...usersSubscription
 })
 const graphqlSchema = schemaComposer.buildSchema()
 
-export default graphqlSchema
+const setPubSub = (pubsub: any) => {
+  setUserPubSub(pubsub)
+}
+
+export { graphqlSchema, setPubSub }

@@ -39,8 +39,11 @@
     "graphql": "^15.6.1",
     "graphql-compose": "^9.0.4",
     "graphql-compose-mongoose": "^9.7.0",
+    "graphql-playground-middleware-express": "^1.7.23",
+    "graphql-subscriptions": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.11",
+    "subscriptions-transport-ws": "^0.11.0",
     "typescript": "^4.4.3"
   }
 }
