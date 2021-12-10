@@ -22,7 +22,7 @@ const usersQuery = {
   // userByIds: UsersTC.mongooseResolvers.findByIds(),
   // userOne: UsersTC.mongooseResolvers.findOne(),
   getUsers: UsersTC.getResolver('findMany'),
-  getAccountID: UsersTC.getResolver('getAccountID', [isAuthenticated])
+  //getAccountID: UsersTC.getResolver('getAccountID', [isAuthenticated])
   // userCount: UsersTC.mongooseResolvers.count(),
   // userConnection: UsersTC.mongooseResolvers.connection(),
   // userPagination: UsersTC.mongooseResolvers.pagination(),
