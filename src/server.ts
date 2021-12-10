@@ -31,6 +31,7 @@ const prod: boolean = process.env.NODE_ENV === "prod"
 const url = process.env.URL || ""
 const KEY_PATH = process.env.KEY_PATH || ""
 const CRT_PATH = process.env.CRT_PATH || ""
+const PORT = process.env.PORT || 4000
 
 mongoose
   .connect(url)
@@ -76,7 +77,7 @@ async function startApolloServer() {
     ? https.createServer(options, app)
     : http.createServer(app)
 
-  httpServer.listen(4000, "0.0.0.0", async () => {
+  httpServer.listen(Number(PORT), "0.0.0.0", async () => {
     new SubscriptionServer(
       {
         execute,
@@ -100,9 +101,7 @@ async function startApolloServer() {
     )
   })
   console.log(
-    `🚀 Server ready at http${prod ? "s" : ""}://localhost:4000${
-      apollo.graphqlPath
-    }`
+    `🚀 Server ready at http${prod ? "s" : ""}://localhost:${String(PORT) + apollo.graphqlPath}`
   )
 }
 

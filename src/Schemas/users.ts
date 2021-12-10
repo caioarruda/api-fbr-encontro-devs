@@ -12,10 +12,10 @@ addUserResolvers(UsersTC)
 
 const usersQuery = {
   userById: UsersTC.getResolver("findById", [isAuthenticated]),
-  userLogin: UsersTC.getResolver("userLogin", [generateToken])
+  userLogin: UsersTC.getResolver("userLogin", [generateToken]),
   // userByIds: UsersTC.mongooseResolvers.findByIds(),
   // userOne: UsersTC.mongooseResolvers.findOne(),
-  // userMany: UsersTC.mongooseResolvers.findMany(),
+  getUsers: UsersTC.getResolver('findMany')
   // userCount: UsersTC.mongooseResolvers.count(),
   // userConnection: UsersTC.mongooseResolvers.connection(),
   // userPagination: UsersTC.mongooseResolvers.pagination(),
