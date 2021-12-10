@@ -37,6 +37,20 @@ const addUserResolvers = (
     }
   })
 
+  UsersTC.addResolver({
+    name: "getAccountID",
+    description: "Buscar id da conta do usuário na pier",
+    type: "Int",
+    args: {
+      email: "String"
+    },
+    resolve: async (payload: any) => {
+      const { email, senha } = payload.args
+      const idconta = 120456
+      return idconta
+    }
+  })
+
   subscriptions.userUpdated = {
     type: UsersTC.getType(),
     args: {

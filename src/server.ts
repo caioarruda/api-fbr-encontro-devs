@@ -17,7 +17,6 @@ import http from "http"
 import https from "https"
 import fs from "fs"
 import {
-  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageDisabled
 } from "apollo-server-core"
 import { execute, subscribe } from "graphql"
@@ -97,7 +96,6 @@ async function startApolloServer() {
     )
   })
   console.log(
-
     `🚀 Server ready at http${prod ? "s" : ""}://localhost:${String(PORT) + apollo.graphqlPath}`
   )
 }
