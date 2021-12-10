@@ -26,6 +26,8 @@ import { SubscriptionServer } from "subscriptions-transport-ws"
 import { graphqlSchema, setPubSub } from "./schemas/index"
 import expressPlayground from "graphql-playground-middleware-express"
 
+console.log(process.env.NODE_ENV?.trim())
+
 const prod: boolean = process.env.NODE_ENV?.trim() === "prod"
 
 const url = process.env.URL || ""
