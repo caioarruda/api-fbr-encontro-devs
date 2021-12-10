@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import dotenv from "dotenv"
 const result = dotenv.config({
-  path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env"
+  path: process.env.NODE_ENV?.trim() === "dev" ? ".env.dev" : ".env"
 })
 
 if (result.error) {
@@ -26,7 +26,7 @@ import { SubscriptionServer } from "subscriptions-transport-ws"
 import { graphqlSchema, setPubSub } from "./schemas/index"
 import expressPlayground from "graphql-playground-middleware-express"
 
-const prod: boolean = process.env.NODE_ENV === "prod"
+const prod: boolean = process.env.NODE_ENV?.trim() === "prod"
 
 const url = process.env.URL || ""
 const KEY_PATH = process.env.KEY_PATH || ""
