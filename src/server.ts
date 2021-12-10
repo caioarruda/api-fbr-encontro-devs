@@ -101,6 +101,7 @@ async function startApolloServer() {
     )
   })
   console.log(
+    prod,
     `🚀 Server ready at http${prod ? "s" : ""}://localhost:${String(PORT) + apollo.graphqlPath}`
   )
 }
