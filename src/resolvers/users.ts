@@ -26,8 +26,8 @@ const addUserResolvers = (
       email: "String",
       senha: "String"
     },
-    resolve: async (args: any) => {
-      const { email, senha } = args
+    resolve: async (payload: any) => {
+      const { email, senha } = payload.args
       const user = await Users.findOne({ email, senha })
       if (!user) {
         return null

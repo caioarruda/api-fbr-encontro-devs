@@ -45,7 +45,7 @@ const generateToken = async (
   info: any
 ) => {
   try {
-    const { email, senha } = args?.filter
+    const { email, senha } = args
     if (!email || !senha) {
       throw new Error("Email, Senha e Regra são campos obrigatórios")
     }
@@ -53,11 +53,12 @@ const generateToken = async (
       expiresIn: "24h"
     })
     const result = await resolve(root, args, context, info)
-    if (!result) return null
+    if (!result)
+      throw new Error("Usuário não encontrado")
     result.token = token
     return result
-  } catch (err) {
-    console.log(err)
+  } catch (err: any) {
+    throw new Error(err)
   }
 }
 
