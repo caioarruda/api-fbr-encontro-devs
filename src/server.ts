@@ -26,15 +26,13 @@ import { SubscriptionServer } from "subscriptions-transport-ws"
 import { graphqlSchema, setPubSub } from "./schemas/index"
 import expressPlayground from "graphql-playground-middleware-express"
 
-console.log(process.env.NODE_ENV?.trim())
-
 const prod: boolean = process.env.NODE_ENV?.trim() === "prod"
 
 const url = process.env.URL || ""
 const KEY_PATH = process.env.KEY_PATH || ""
 const CRT_PATH = process.env.CRT_PATH || ""
 const PORT = process.env.PORT || 4000
-
+console.log(process.env.PLAYGROUND)
 mongoose
   .connect(url)
   .then(() => {
@@ -63,7 +61,7 @@ async function startApolloServer() {
       }
     },
     plugins: [
-      prod
+      prod && !process.env.PLAYGROUND
         ? ApolloServerPluginLandingPageDisabled()
         : ApolloServerPluginLandingPageGraphQLPlayground()
     ]
@@ -103,7 +101,7 @@ async function startApolloServer() {
     )
   })
   console.log(
-    prod,
+
     `🚀 Server ready at http${prod ? "s" : ""}://localhost:${String(PORT) + apollo.graphqlPath}`
   )
 }
