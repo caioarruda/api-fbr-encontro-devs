@@ -18,6 +18,7 @@ addUserResolvers(UsersTC)
 
 const usersQuery = {
   userById: UsersTC.getResolver("findById", [isAuthenticated]),
+  userOne: UsersTC.getResolver("findOne"),
   userLogin: UsersTC.getResolver("userLogin", [generateToken]),
   // userByIds: UsersTC.mongooseResolvers.findByIds(),
   // userOne: UsersTC.mongooseResolvers.findOne(),
