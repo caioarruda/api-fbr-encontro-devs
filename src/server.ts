@@ -32,7 +32,7 @@ const url = process.env.URL || ""
 const KEY_PATH = process.env.KEY_PATH || ""
 const CRT_PATH = process.env.CRT_PATH || ""
 const PORT = process.env.PORT || 4000
-console.log(process.env.PLAYGROUND)
+
 mongoose
   .connect(url)
   .then(() => {
@@ -60,11 +60,7 @@ async function startApolloServer() {
         token: req.headers["authorization"]
       }
     },
-    plugins: [
-      prod && !process.env.PLAYGROUND
-        ? ApolloServerPluginLandingPageDisabled()
-        : ApolloServerPluginLandingPageGraphQLPlayground()
-    ]
+    plugins: [ApolloServerPluginLandingPageDisabled()]
   })
 
   await apollo.start()
