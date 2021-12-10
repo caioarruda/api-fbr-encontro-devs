@@ -2,13 +2,14 @@ import { UsersTC } from "../models/users"
 import {
   addUserResolvers,
   setUserPubSub,
-  onUpdateUser,
   subscriptions
 } from "../resolvers/users"
 
 import { isAuthenticated, generateToken } from "../helpers/auth"
+import usersMiddleWares from "../middlewares/users"
 
 addUserResolvers(UsersTC)
+usersMiddleWares.setUserPubSub(setUserPubSub);
 
 const usersQuery = {
   userById: UsersTC.getResolver("findById", [isAuthenticated]),
@@ -21,8 +22,8 @@ const usersQuery = {
   // userPagination: UsersTC.mongooseResolvers.pagination(),
 }
 const usersMutation = {
-  userCreateOne: UsersTC.getResolver("createOne"),
-  userUpdateById: UsersTC.getResolver("updateById", [onUpdateUser])
+  userCreateOne: UsersTC.getResolver("createOne", [usersMiddleWares.existEmail]),
+  userUpdateById: UsersTC.getResolver("updateById", [usersMiddleWares.onUpdateUser])
   // userCreateMany: UsersTC.mongooseResolvers.createMany(),
   // userUpdateOne: UsersTC.mongooseResolvers.updateOne(),
   // userUpdateMany: UsersTC.mongooseResolvers.updateMany(),
