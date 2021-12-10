@@ -11,7 +11,8 @@ const subscriptions: UserSubscriptions = {} as UserSubscriptions
 
 
 type UserSubscriptions = {
-  userUpdated: any
+  userUpdated: any,
+  userCreated: any
 }
 
 
@@ -46,6 +47,17 @@ const addUserResolvers = (
       () => pubsub.asyncIterator("USER_UPDATED"),
       (payload, args) => {
         return String(payload?._id) === args.user
+      }
+    )
+  }
+  subscriptions.userCreated = {
+    type: UsersTC.getType(),
+    args: {},
+    resolve: (payload: any) => payload,
+    subscribe: withFilter(
+      () => pubsub.asyncIterator("USER_CREATED"),
+      (payload, args) => {
+        return true
       }
     )
   }

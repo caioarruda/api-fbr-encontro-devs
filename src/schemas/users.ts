@@ -6,10 +6,15 @@ import {
 } from "../resolvers/users"
 
 import { isAuthenticated, generateToken } from "../helpers/auth"
-import usersMiddleWares from "../middlewares/users"
+import usersMiddleWares, { setPubSub } from "../middlewares/users"
+
+const setPubSubs = (pubsub: any) => {
+  setPubSub(pubsub)
+  setUserPubSub(pubsub)
+}
 
 addUserResolvers(UsersTC)
-usersMiddleWares.setUserPubSub(setUserPubSub);
+
 
 const usersQuery = {
   userById: UsersTC.getResolver("findById", [isAuthenticated]),
@@ -22,7 +27,7 @@ const usersQuery = {
   // userPagination: UsersTC.mongooseResolvers.pagination(),
 }
 const usersMutation = {
-  userCreateOne: UsersTC.getResolver("createOne", [usersMiddleWares.existEmail]),
+  userCreateOne: UsersTC.getResolver("createOne", [usersMiddleWares.existEmail, usersMiddleWares.onCreateUser]),
   userUpdateById: UsersTC.getResolver("updateById", [usersMiddleWares.onUpdateUser])
   // userCreateMany: UsersTC.mongooseResolvers.createMany(),
   // userUpdateOne: UsersTC.mongooseResolvers.updateOne(),
@@ -33,7 +38,8 @@ const usersMutation = {
 }
 
 const usersSubscription = {
-  userUpdated: subscriptions.userUpdated
+  userUpdated: subscriptions.userUpdated,
+  userCreated: subscriptions.userCreated
 }
 
-export { usersQuery, usersMutation, usersSubscription, setUserPubSub }
+export { usersQuery, usersMutation, usersSubscription, setPubSubs }

@@ -3,7 +3,7 @@ import {
   usersQuery,
   usersMutation,
   usersSubscription,
-  setUserPubSub
+  setPubSubs
 } from "./users"
 
 const schemaComposer = new SchemaComposer()
@@ -19,7 +19,7 @@ schemaComposer.Subscription.addFields({
 const graphqlSchema = schemaComposer.buildSchema()
 
 const setPubSub = (pubsub: any) => {
-  setUserPubSub(pubsub)
+  setPubSubs(pubsub)
 }
 
 export { graphqlSchema, setPubSub }
